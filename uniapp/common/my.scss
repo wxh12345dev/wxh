@@ -1,0 +1,146 @@
+.user-class{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 30px;
+	.u-avatar{
+		height: 60px !important;
+		width: 60px !important;
+	}
+	.name-text{
+		font-size: 18px;
+		margin-top: 10px;
+	}
+}
+.user-btn{
+	margin-top: 20px;
+}
+.about-class{
+	font-size: 20px;
+	margin-top: 50px;
+	text-indent: 40px;
+	width: 90%;
+	margin-left: 5%;
+	line-height: 40px;
+}
+
+.index-class{
+	.index-header{
+		width: 100%;
+		height:230px;
+		background: url(/static/images/shengji.jpg) no-repeat;
+		background-size:  100% 100%;
+		.date{
+			font-size: 22px;
+			margin-left: 10px;
+			line-height: 40px;
+			color:#003600
+		}
+		.time{
+			font-size: 35px;
+			margin-left: 10px;
+			line-height: 40px;
+			color:#003600
+		}
+	}
+}
+.index-content{
+	margin-top: 10px;
+	.u-cell_title{
+		font-size: 22px !important;
+		font-weight: 800;
+	}
+	.toDo-class{
+		margin-top: 10px;
+		background-color: #dfd9ff;
+		border-radius: 20px;
+		width: 95%;
+		margin-left: 2.5%;
+		padding: 10px 5%;
+		.line-class{
+			height: 1px;
+			width: 100%;
+			border-bottom: solid 1px #5b5b5b;
+		}
+		.head-class{
+			display: flex;
+			line-height: 40px;
+			.head-title{
+				font-size: 16px;
+				width: calc(100% - 130px);
+			}
+			.head-date{
+				width: 130px;
+				text-align: right;
+			}
+		}
+		.body-class{
+			text-indent: 30px;
+			line-height: 40px;
+			font-size: 14px;
+		}
+		.dairy-class{
+			margin-top: 5px;
+			line-height: 30px;
+			font-size: 14px;
+			display: flex;
+			.left-content{
+				text-indent: 30px;
+				width: calc(100% - 100px);
+				margin-right: 20px;
+			}
+			.right-content{
+				height: 80px;
+				width: 80px;
+				margin-top: 5px;
+			}
+		}
+	}
+}
+.beiwang-class{
+	font-size: 16px !important;
+}
+.beiwang-icon{
+	position: fixed;
+	right: 0;
+	top:44px;
+	width: 55px;
+	height: 55px;
+	z-index: 1000;
+	.add-icon-class{
+		margin-top: 5.5px;
+		margin-left: 7.5px;
+	}
+}
+.list-class{
+	margin-top: 75px;
+		.list-item{
+			width: 95%;
+			margin-left: 2.5%;
+			border-radius: 20px;
+			background-color: #dfd9ff;
+			margin-top: 20px;
+			.line-class{
+				height: 1px;
+				width: 100%;
+				border-bottom: solid 1px #5b5b5b;
+			}
+			.head-class{
+				display: flex;
+				line-height: 40px;
+				.head-title{
+					font-size: 16px;
+					width: calc(100% - 130px);
+				}
+				.head-date{
+					width: 130px;
+					text-align: right;
+				}
+			}
+			.body-class{
+				text-indent: 30px;
+				line-height: 40px;
+				font-size: 14px;
+			}
+		}
+	}
