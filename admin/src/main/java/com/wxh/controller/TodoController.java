@@ -37,7 +37,7 @@ public class TodoController {
 	@RequestMapping("/edit")
 	public Result edit(@RequestBody Todo todo) {
 		if (StringUtils.isEmpty(todo.getContent())) {
-			throw new InvalidException("请输入日记内容！");
+			throw new InvalidException("请输入待办事项！");
 		}
 		String id = todo.getId();
 		if (StringUtils.isEmpty(id)) {
@@ -55,15 +55,28 @@ public class TodoController {
 	@RequestMapping("/delete")
 	public Result delete(String id) {
 		if (StringUtils.isEmpty(id)) {
-			throw new InvalidException("请选择要数据！");
+			throw new InvalidException("请选择要删除数据！");
 		}
 		todoService.removeById(id);
 		return ResultUtil.getInfo("操作成功");
 	}
 
+	@RequestMapping("/get")
+	public Result get(String id) throws Exception {
+		if (StringUtils.isEmpty(id)) {
+			throw new InvalidException("请选择要查看的数据！");
+		}
+		Todo todo = todoService.getById(id);
+		if (todo==null) {
+			throw new InvalidException("该数据不存在，请返回上级菜单重试！");
+		}
+		return ResultUtil.getData(todo);
+	}
+	
 	@RequestMapping("/page")
 	public Result page(@RequestBody Todo todo) throws Exception {
 		QueryWrapper<Todo> queryWrapper = new ParamUtil<Todo>().getQueryWrapper(todo);
+		queryWrapper.orderByAsc("finish");
 		queryWrapper.orderByDesc("created");
 		IPage<Todo> result = todoService.page(new Page<Todo>(todo.getCurrentPage(), todo.getPageSize()),
 				queryWrapper);

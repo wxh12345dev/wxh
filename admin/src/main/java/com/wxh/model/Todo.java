@@ -32,6 +32,7 @@ public class Todo extends BaseCondition {
     private String content;
 
     @TableField("FINISH")
+    @MyQueryAnnotation("eq")
     private Integer finish;
 
     @TableField("CREATED")

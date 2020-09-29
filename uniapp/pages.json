@@ -13,7 +13,8 @@
 			"path": "pages/beiwang/index",
 			"style": {
 				"navigationBarTitleText": "备忘录",
-				"navigationStyle":"default"
+				"navigationStyle":"default",
+				 "enablePullDownRefresh": true
 			}
 		},
 		{

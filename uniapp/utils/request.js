@@ -1,15 +1,17 @@
 import Vue from 'vue'
 let baseUrl = ""
-if(process.env.NODE_ENV === 'development'){
-	baseUrl="http://localhost:8083/"
-}else{
-	baseUrl="生产基地址"
+if (process.env.NODE_ENV === 'development') {
+	baseUrl = "http://localhost:8083/"
+} else {
+	baseUrl = "生产基地址"
 }
 const request = {
 	postJson(url, data) {
+		console.log(Vue)
+		console.log(this)
 		return this.getPromise(url, "POST", {
 			'content-type': 'application/json'
-		},data);
+		}, data);
 	},
 	get(url) {
 		return this.getPromise(url, "GET", {
@@ -19,49 +21,48 @@ const request = {
 	post(url, data) {
 		return this.getPromise(url, "POST", {
 			'content-type': 'application/x-www-form-urlencoded'
-		},data);
+		}, data);
 	},
-	navigateTo(url){
+	navigateTo(url) {
 		uni.navigateTo({
 			url: url
 		})
 	},
-	getPromise(url, method, header,data) {
+	getPromise(url, method, header, data) {
 		return new Promise((resolve, reject) => {
 			return uni.request({
-				url: baseUrl+url,
+				url: baseUrl + url,
 				method: method,
 				header: header,
-				data:data,
+				data: data,
 				success: (res) => {
 					//返回数据及处理
-					if(res.data.code == 200){
-						if(res.data.info!=undefined&&res.data.info.trim()!=''){
-							uni.showToast({
-								title: res.data.info
-							})
-						}
+					if (res.data.code == 200) {
 						resolve(res)
-					}else if (res.data.code == 412) {
+					} else if (res.data.code == 412) {
 						uni.showToast({
-							title: res.data.info
+							title: res.data.info,
+							icon: 'none'
 						})
 						reject(res)
 					} else if (res.data.code == 101) {
 						uni.showToast({
-							title: '尚未登陆，请登陆后重试！'
+							title: '尚未登陆，请登陆后重试！',
+							icon: 'none'
 						})
 						reject(res)
 					} else if (res.data.code == 500) {
 						uni.showToast({
-							title: '系统繁忙，请稍后再试！'
+							title: '系统繁忙，请稍后再试！',
+							icon: 'none',duration:200000
 						})
 						reject(res)
 					}
 				},
 				fail: (err) => {
 					uni.showToast({
-						title: '系统繁忙，请稍后再试！'
+						title: '系统繁忙，请稍后再试！',
+						icon: 'none',duration:200000
 					})
 					reject(err)
 				}

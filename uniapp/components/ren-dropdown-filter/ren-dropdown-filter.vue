@@ -74,8 +74,6 @@ export default {
         this.keepStatus();
     },
     mounted() {
-		console.log(111111)
-		console.log(this.top)
         // this.selDate = getCurDateTime().formatDate;
     },
     methods: {
@@ -111,7 +109,6 @@ export default {
                 let sel = item.filter(child => child.select);
                 data.push(sel);
             });
-            console.log(data);
             this.$emit('onSelected', data);
         },
         dateClick() {
