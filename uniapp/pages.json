@@ -12,7 +12,7 @@
 		{
 			"path": "pages/beiwang/index",
 			"style": {
-				"navigationBarTitleText": "备忘录",
+				"navigationBarTitleText": "我的备忘录",
 				"navigationStyle":"default",
 				 "enablePullDownRefresh": true
 			}
@@ -20,7 +20,7 @@
 		{
 			"path": "pages/riji/index",
 			"style": {
-				"navigationBarTitleText": "日记",
+				"navigationBarTitleText": "我的日记",
 				"navigationStyle":"default"
 			}
 		},
@@ -35,12 +35,19 @@
 		},
 		{
 			"path": "pages/riji/detail"
+		},
+		{
+			"path": "pages/riji/show"
 		}
-	],
+	    ,{
+            "path" : "components/todo/todo",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationStyle":"custom",
-		"navigationBarBackgroundColor": "#57b542",
+		"navigationBarBackgroundColor": "#68b56b",
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {

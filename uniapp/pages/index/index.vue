@@ -13,64 +13,47 @@
 		</view>
 		<u-tabs :list="list" :is-scroll="false" :current="current" @change="change" font-size="40"></u-tabs>
 		<view class="index-content">
-			<view v-show="current==0" class="toDo-class" v-for="(item,key) in datas" :key="item.id">
-				<view class="head-class">
-					<view class="head-title">
-						{{item.createdStr}}
-					</view>
-					<view class="head-date" @click="deleteTodoDetail(item.id)">
-						<u-icon name="trash"  size="28"></u-icon>
-					</view>
-				</view>
-				<view class="body-class u-line-3" @click="getTodoDetail(item.id)">
-					{{item.content}}
-				</view>
-			</view>
-			<view v-show="current==1" class="toDo-class" v-for="(item,key) in diarys" :key="item.id" @click="getRijiDetail(item.id)">
-				<view class="head-class">
-					<view class="head-title u-line-1">
-						{{item.title}}
-					</view>
-					<view class="head-date">
-						{{item.createdStr}}
-					</view>
-				</view>
-				<view class="dairy-class">
-					<view class="left-content u-line-3">
-						{{item.content}}
-					</view>
-					<view class="right-content">
-						<u-image :src="item.url" :lazy-load="true" height="100%" width="80px"></u-image>
-					</view>
-				</view>
+			<todo v-show="current==0" :datas="datas" @pSearch="search" @pDeleteTodoDetail="deleteTodoDetail" />
+			<riji v-show="current==1" :datas="dairys" @pSearch="search" @pDeleteTodoDetail="deleteTodoDetail"/>
+			<u-toast ref="uToast" />
+			<u-modal v-model="show" content="确定要删除该数据吗？" :show-title="false" :show-cancel-button="true" @confirm="confirm"
+			 :deleteId="deleteId"></u-modal>
+			
+			<view class="loadMore">
+				<u-loadmore :status="status" :icon-type="iconType" :load-text="loadText" font-size="34" />
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import riji from '@/components/todo/riji.vue'
 	import moment from "moment";
 	export default {
+		components: {
+			riji
+		},
 		data() {
 			return {
 				currentTime: '',
 				currentDay: '',
-				datas: [{
-					id:'111',
-					content: '危楼高百尺，手可摘星辰。不敢高声语，恐惊天上人。',
-					createdStr: '2020-09-28 11:16'
-				}, {
-					id:'222',
-					content: '日照香炉生紫烟，遥看瀑布挂前川。飞流直下三千尺，疑是银河落九天。',
-					createdStr: '2020-09-28 11:16'
-				}],
-				diarys:[{
-					id:'333',
-					createdStr:'2020-09-28 11:16',
-					title:'国庆去哪玩',
-					content:'今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，今年国庆中秋一起放假啊，',
-					url:'http://qiniu.wucunhua.com/52cbd32485d343b7bdefcc2264b89ccb_4.jpg'
-				}],
+				datas: [],
+				deleteId: '',
+				show: false,
+				form: {
+					currentPage: 1,
+					pageSize: 5,
+					finish: 0
+				},
+				status: 'loadmore',
+				iconType: 'flower',
+				loadText: {
+					loadmore: '上拉加载更多',
+					loading: '努力加载中',
+					nomore: '没有更多了'
+				},
+				dairys:[],
+				pages:0,
 				list: [{
 					name: '我的待办'
 				}, {
@@ -85,6 +68,23 @@
 				this.currentDay = date.format('MM月DD日') + " " + this.getWeek(date.weekday())
 				this.currentTime = date.format('HH:mm:ss')
 			}, 1000)
+		},
+		onReachBottom() {
+			if(this.pages>this.form.currentPage){
+				this.form.currentPage += 1;
+				//还有下一页
+				this.search(true);
+			}else{
+				this.status = 'nomore'
+				this.loadText.nomore="没有更多了"
+			}
+		},
+		onShow() {
+			if(this.current==0){
+				this.search()
+			}else if(this.current==1){
+				this.dairySearch()
+			}
 		},
 		methods: {
 			getWeek(index) {
@@ -107,6 +107,76 @@
 			},
 			change(index) {
 				this.current = index;
+				if(this.current==0){
+					this.search()
+				}else if(this.current==1){
+					this.dairySearch()
+				}
+			},
+			deleteTodoDetail(id) {
+				this.show = true
+				this.deleteId = id 
+			},
+			search(type) {
+				if(type==undefined){
+					this.form.currentPage = 1
+				}
+				this.status = 'loading'
+				this.$request.postJson('todo/page', JSON.stringify(this.form)).then(res => {
+					if(type){
+						console.log(this.datas)
+						this.datas = this.datas.concat(res.data.data.records)
+						console.log(this.datas)
+					}else{
+						this.datas = res.data.data.records
+					}
+					this.pages = res.data.data.pages
+					if(this.pages<=this.form.currentPage){
+						this.status = 'nomore'
+					}else{
+						this.status = 'loadmore'
+					}
+				}).catch(err=>{
+					this.status = 'nomore'
+					this.loadText.nomore="系统繁忙，请稍后再试"
+				})
+				
+			},
+			dairySearch(type) {
+				if(type!=true){
+					this.form.currentPage = 1
+				}
+				this.status = 'loading'
+				this.$request.postJson('dairy/page', JSON.stringify(this.form)).then(res => {
+					if(type==true){
+						this.dairys = this.dairys.concat(res.data.data.records)
+					}else{
+						this.dairys = res.data.data.records
+					}
+					this.pages = res.data.data.pages
+					if(this.pages<=this.form.currentPage){
+						this.status = 'nomore'
+					}else{
+						this.status = 'loadmore'
+					}
+				}).catch(err=>{
+					this.status = 'nomore'
+					this.loadText.nomore="系统繁忙，请稍后再试"
+				})
+				
+			},
+			confirm() {
+				this.$request.get('todo/delete?id=' + this.deleteId).then(res => {
+					if (res.data.info != undefined && res.data.info.trim() != '') {
+						this.$refs.uToast.show({
+							title: res.data.info,
+							type: 'success'
+						})
+					}
+					this.$request.postJson('todo/page', JSON.stringify(this.form)).then(res => {
+						this.datas = res.data.data.records
+					})
+				})
 			}
 		}
 	}

@@ -7,8 +7,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 const request = {
 	postJson(url, data) {
-		console.log(Vue)
-		console.log(this)
 		return this.getPromise(url, "POST", {
 			'content-type': 'application/json'
 		}, data);
@@ -51,10 +49,11 @@ const request = {
 							icon: 'none'
 						})
 						reject(res)
-					} else if (res.data.code == 500) {
+					} else {
 						uni.showToast({
 							title: '系统繁忙，请稍后再试！',
-							icon: 'none',duration:200000
+							icon: 'none',
+							duration: 2000
 						})
 						reject(res)
 					}
@@ -62,7 +61,8 @@ const request = {
 				fail: (err) => {
 					uni.showToast({
 						title: '系统繁忙，请稍后再试！',
-						icon: 'none',duration:200000
+						icon: 'none',
+						duration: 2000
 					})
 					reject(err)
 				}

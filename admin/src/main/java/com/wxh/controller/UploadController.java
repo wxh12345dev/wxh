@@ -36,7 +36,7 @@ public class UploadController {
 		try(InputStream inputStream = file.getInputStream()){
 			qiniuUpload.upload(inputStream, fileName);
         }
-		return ResultUtil.getData(fileName);
+		return ResultUtil.getData("http://wxh.wucunhua.com/"+fileName);
 	}
 	
 	

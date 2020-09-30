@@ -47,5 +47,8 @@ public class Dairy extends BaseCondition {
 	@MyQueryAnnotation(value = "lt",field = "created")
 	@TableField(exist = false)
 	private Date endDate;
+	
+	@TableField(exist = false)
+    private String urlFirst;
 
 }
