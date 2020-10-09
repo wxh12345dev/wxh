@@ -13,25 +13,27 @@
 		</view>
 		<u-tabs :list="list" :is-scroll="false" :current="current" @change="change" font-size="40"></u-tabs>
 		<view class="index-content">
-			<todo v-show="current==0" :datas="datas" @pSearch="search" @pDeleteTodoDetail="deleteTodoDetail" />
+			<todo v-show="current==0" :datas="datas" @pSearch="search" @pDeleteTodoDetail="deleteTodoDetail" @pSwitchType="switchType"/>
 			<riji v-show="current==1" :datas="dairys" @pSearch="search" @pDeleteTodoDetail="deleteTodoDetail"/>
 			<u-toast ref="uToast" />
-			<u-modal v-model="show" content="确定要删除该数据吗？" :show-title="false" :show-cancel-button="true" @confirm="confirm"
-			 :deleteId="deleteId"></u-modal>
+			<u-modal v-model="show" content="确定要删除该数据吗？" :show-title="false" :show-cancel-button="true" @confirm="confirm"></u-modal>
 			
 			<view class="loadMore">
 				<u-loadmore :status="status" :icon-type="iconType" :load-text="loadText" font-size="34" />
 			</view>
 		</view>
+		<u-modal v-model="switchShow" :content="switchContent" :show-title="false" :show-cancel-button="true" @confirm="switchConfirm"></u-modal>
 	</view>
 </template>
 
 <script>
 	import riji from '@/components/todo/riji.vue'
+	import todo from '@/components/todo/todo.vue'
 	import moment from "moment";
 	export default {
 		components: {
-			riji
+			riji,
+			todo
 		},
 		data() {
 			return {
@@ -59,7 +61,10 @@
 				}, {
 					name: '我的日记'
 				}],
-				current: 0
+				current: 0,
+				switchShow:false,
+				switchContent:'',
+				switchItem:{}
 			}
 		},
 		mounted() {
@@ -113,9 +118,18 @@
 					this.dairySearch()
 				}
 			},
-			deleteTodoDetail(id) {
+			switchType(item) {
+				if(item.finish==0){
+					this.switchContent="确定要标记为完成吗？"
+				}else{
+					this.switchContent="确定要标记为未完成吗？"
+				}
+				this.switchShow = true
+				this.switchItem  = item
+			},
+			deleteTodoDetail(item) {
 				this.show = true
-				this.deleteId = id 
+				this.deleteId = item.id 
 			},
 			search(type) {
 				if(type==undefined){
@@ -165,16 +179,34 @@
 				})
 				
 			},
+			switchConfirm(){
+				let finish = 1 - this.switchItem.finish;
+				this.$request.postJson('todo/edit', {
+					"id": this.switchItem.id,
+					"content": this.switchItem.content,
+					"finish": finish
+				}).then(res => {
+					this.search()
+				})
+			},
 			confirm() {
-				this.$request.get('todo/delete?id=' + this.deleteId).then(res => {
+				let path = 'todo';
+				if(this.current==1){
+					path = 'dairy'
+				}
+				this.$request.get(path+'/delete?id=' + this.deleteId).then(res => {
 					if (res.data.info != undefined && res.data.info.trim() != '') {
 						this.$refs.uToast.show({
 							title: res.data.info,
 							type: 'success'
 						})
 					}
-					this.$request.postJson('todo/page', JSON.stringify(this.form)).then(res => {
-						this.datas = res.data.data.records
+					this.$request.postJson(path+'/page', JSON.stringify(this.form)).then(res => {
+						if(this.current==1){
+							this.dairys = res.data.data.records
+						}else{
+							this.datas = res.data.data.records
+						}
 					})
 				})
 			}

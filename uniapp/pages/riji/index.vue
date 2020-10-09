@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view  class="search-class">
-			<u-search :show-action="true" v-model="form.content" placeholder="搜索日记" action-text="搜索" :animation="true"
+			<u-search :show-action="true" v-model="form.title" placeholder="搜索日记" action-text="搜索" :animation="true"
 			 @search="search" @clear="search" @custom="search"></u-search>
 		</view>
 		<riji :datas="datas" @pSearch="search" @pDeleteTodoDetail="deleteTodoDetail"/>
@@ -35,7 +35,7 @@
 					currentPage: 1,
 					pageSize: 5,
 					finish: 0,
-					content:''
+					title:''
 				},
 				status: 'loadmore',
 				iconType: 'flower',
@@ -65,9 +65,9 @@
 			}
 		},
 		methods: {
-			deleteTodoDetail(id) {
+			deleteTodoDetail(item) {
 				this.show = true
-				this.deleteId = id 
+				this.deleteId = item.id 
 			},
 			search(type) {
 				if(type!=true){

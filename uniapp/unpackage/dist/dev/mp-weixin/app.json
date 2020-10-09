@@ -1,0 +1,53 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/beiwang/index",
+    "pages/riji/index",
+    "pages/user/index",
+    "pages/user/about",
+    "pages/beiwang/detail",
+    "pages/riji/detail",
+    "pages/riji/show",
+    "pages/user/login"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom",
+    "navigationBarBackgroundColor": "#68b56b",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#0C9EDE",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/images/shouye.png",
+        "selectedIconPath": "static/images/shouyeHL.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/beiwang/index",
+        "iconPath": "static/images/beiwang.png",
+        "selectedIconPath": "static/images/beiwangHL.png",
+        "text": "备忘录"
+      },
+      {
+        "pagePath": "pages/riji/index",
+        "iconPath": "static/images/riji.png",
+        "selectedIconPath": "static/images/rijiHL.png",
+        "text": "日记"
+      },
+      {
+        "pagePath": "pages/user/index",
+        "iconPath": "static/images/user.png",
+        "selectedIconPath": "static/images/userHL.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

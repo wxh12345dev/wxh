@@ -1,6 +1,10 @@
 <template>
 	<view>
-		<uni-nav-bar left-icon="back" left-text="返回" title="我的日记" @clickLeft="goBack" rightText="编辑" @clickRight="edit"></uni-nav-bar>
+		<u-navbar   back-text="返回">
+			<view slot="right" @click="edit" style="color: rgb(96, 98, 102);font-size: 15px;width: 40px;line-height: 44px;">
+				编辑
+			</view>
+		</u-navbar>
 		<view class="riji-banner">
 			<u-swiper :list="images" height="350" img-mode="scaleToFill"></u-swiper>
 		</view>
@@ -14,11 +18,7 @@
 </template>
 
 <script>
-	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	export default {
-		components: {
-			uniNavBar
-		},
 		data() {
 			return {
 				form:{
@@ -36,7 +36,7 @@
 		methods:{
 			edit(){
 				uni.navigateTo({
-					url:'detail?id='+this.form.id
+					url:'detail?id='+this.form.id+'&title=编辑日记'
 				})
 			},
 			goBack() {

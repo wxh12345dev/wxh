@@ -50,7 +50,7 @@
 				form: {
 					currentPage: 1,
 					pageSize: 5,
-					finish: 0,
+					finish: '',
 					content:''
 				},
 				status: 'loadmore',

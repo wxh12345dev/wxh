@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "欢迎使用！",
+  "usingComponents": {
+    "u-tabs": "/node-modules/uview-ui/components/u-tabs/u-tabs",
+    "todo": "/components/todo/todo",
+    "u-toast": "/node-modules/uview-ui/components/u-toast/u-toast",
+    "u-modal": "/node-modules/uview-ui/components/u-modal/u-modal",
+    "u-loadmore": "/node-modules/uview-ui/components/u-loadmore/u-loadmore",
+    "riji": "/components/todo/riji"
+  }
+}

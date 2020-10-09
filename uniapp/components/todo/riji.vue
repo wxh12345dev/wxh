@@ -18,7 +18,7 @@
 				</view>
 			</view>
 			<view class="tool-class">
-				<u-icon name="trash" size="35" @click="deleteTodoDetail(item.id)"></u-icon>
+				<u-icon name="trash" size="35" @click="deleteTodoDetail(item)"></u-icon>
 			</view>
 		</view>
 	</view>
@@ -35,8 +35,8 @@
 			}
 		},
 		methods: {
-			deleteTodoDetail(id) {
-				this.$emit('pDeleteTodoDetail', id)
+			deleteTodoDetail(item) {
+				this.$emit('pDeleteTodoDetail', item)
 			}
 		}
 	}

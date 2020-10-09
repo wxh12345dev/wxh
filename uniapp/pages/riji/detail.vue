@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<u-toast ref="uToast" />
-		<uni-nav-bar left-icon="back" left-text="返回" title="编辑日记" @clickLeft="goBack" backgroundColor="#57b542" color="#ffffff"></uni-nav-bar>
+		<u-navbar  :title="title" back-text="返回"/>
 		<view class="beiwang-detail">
 			<u-form :model="form" ref="uForm">
 				<u-form-item prop="title" label-width="0px">
@@ -20,11 +20,7 @@
 </template>
 
 <script>
-	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	export default {
-		components: {
-			uniNavBar
-		},
 		data() {
 			return {
 				title: '',
@@ -52,6 +48,7 @@
 			this.$refs.uForm.setRules(this.rules);
 		},
 		onLoad(option) {
+			this.title = option.title
 			this.search(option.id)
 		},
 		onShow() {

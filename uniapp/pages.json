@@ -38,11 +38,14 @@
 		},
 		{
 			"path": "pages/riji/show"
+		},
+		{
+			"path": "pages/user/login",
+			"style": {
+				"navigationBarTitleText": "登陆",
+				"navigationStyle":"default"
+			}
 		}
-	    ,{
-            "path" : "components/todo/todo",
-            "style" : {}
-        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

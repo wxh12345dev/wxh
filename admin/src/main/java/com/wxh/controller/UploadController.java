@@ -15,7 +15,7 @@ import com.wxh.util.StringUtil;
 
 /**
  * <p>
- * 前端控制器
+ * 前端控制器 wxebeeea286b852dc1 63e415a83351e61b78ab56a014813f07
  * </p>
  *
  * @author wxh
@@ -27,19 +27,16 @@ public class UploadController {
 	private QiniuUpload qiniuUpload;
 
 	@RequestMapping("/upload")
-	public Result uplaod(MultipartFile file,String oriName) throws IOException {
+	public Result uplaod(MultipartFile file, String oriName) throws IOException {
 		String fileName = file.getOriginalFilename();
-		if(!"1".equals(oriName)) {
+		if (!"1".equals(oriName)) {
 			fileName = StringUtil.getUuid() + "_" + fileName;
 			fileName = fileName.replace(".png", ".jpg");
 		}
-		try(InputStream inputStream = file.getInputStream()){
+		try (InputStream inputStream = file.getInputStream()) {
 			qiniuUpload.upload(inputStream, fileName);
-        }
-		return ResultUtil.getData("http://wxh.wucunhua.com/"+fileName);
+		}
+		return ResultUtil.getData("http://wxh.wucunhua.com/" + fileName);
 	}
-	
-	
-	
 
 }

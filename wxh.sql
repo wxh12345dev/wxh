@@ -31,7 +31,7 @@ CREATE TABLE `dairy` (
 
 /*Data for the table `dairy` */
 
-insert  into `dairy`(`ID`,`TITLE`,`CONTENT`,`URL`,`CREATED`) values ('1','今天天气好晴朗！','厦门的天气可真不错啊！','http://qiniu.wucunhua.com/8fbd448f70ae461ea5e04280a789883a_2.jpg',NULL),('2','生活日记','生活美好，好好珍惜！','http://qiniu.wucunhua.com/a92c23462c14463395fa2a546f30d368_1.jpg;http://qiniu.wucunhua.com/d433d1b654e7428bb53f205bedc5b4d2_images.jpg',NULL);
+insert  into `dairy`(`ID`,`TITLE`,`CONTENT`,`URL`,`CREATED`) values ('974b986185844fae9dad2e195263ac01','今天是个好日子！','明天就是国庆啦，开心！','http://wxh.wucunhua.com/fadc8aee0d01491a90964ee7e915c83f_3.jpg','2020-09-30 06:43:00');
 
 /*Table structure for table `todo` */
 
@@ -47,7 +47,7 @@ CREATE TABLE `todo` (
 
 /*Data for the table `todo` */
 
-insert  into `todo`(`ID`,`CONTENT`,`FINISH`,`CREATED`) values ('111','今天晚上吃西瓜！',0,'2020-09-28 16:05:50'),('222','明早记得带雨伞！',1,'2020-09-28 16:06:08');
+insert  into `todo`(`ID`,`CONTENT`,`FINISH`,`CREATED`) values ('12ebb8d7688e4b2d897a9754bd9772b0','e\'w\'q',1,'2020-09-29 08:42:37'),('222','明早记得带雨伞！明早记得带雨伞！明早记得带雨伞！明早记得带雨伞！明早记得带雨伞！明早记得带雨伞！明早记得带222雨伞！',1,'2020-09-28 16:06:00'),('81a75f0343274b89a49c5ec5ad2133ae','大撒大撒',1,'2020-09-30 02:54:05'),('8590185cc19c4dbf82b06528d0218af0','大撒大撒',0,'2020-09-30 02:54:08'),('8c41c660ea934079b020c7792079852f','ewqewq的撒旦',0,'2020-09-30 01:41:00'),('aa623cc2f1bf4ee0ab264d6b006faea6','为五千',1,'2020-09-30 02:00:15'),('b45e93ea941b422f884ba683094c04e8','大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒',1,'2020-09-29 08:43:02'),('e1c5e2f493904d249c53a07c3b91dc25','大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒',1,'2020-09-29 08:42:00'),('e23a0adfe3ed4979b5e487db1f2e9ddc','大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒大撒',1,'2020-09-29 08:42:00'),('ea9e0df323be4ab38a7d55859459529f','撒旦撒',0,'2020-09-30 02:54:02'),('ed00f9592be64f81a7dd57c8ba32c2bb','大撒大撒',1,'2020-09-29 08:42:33');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

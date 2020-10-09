@@ -3,7 +3,7 @@ let baseUrl = ""
 if (process.env.NODE_ENV === 'development') {
 	baseUrl = "http://localhost:8083/"
 } else {
-	baseUrl = "生产基地址"
+	baseUrl = "https://www.wucunhua.com/"
 }
 const request = {
 	postJson(url, data) {
@@ -26,6 +26,28 @@ const request = {
 			url: url
 		})
 	},
+	login() {
+		//判断是否登陆
+		let user = uni.getStorageSync('user');
+		if (user != undefined && user != '') {
+			return true;
+		}
+		uni.login({
+			provider: 'weixin',
+			success: function(loginRes) {
+				console.log(loginRes.authResult);
+				// 获取用户信息
+				uni.getUserInfo({
+					provider: 'weixin',
+					success: function(infoRes) {
+						return true;
+						console.log('用户昵称为：' + infoRes.userInfo.nickName);
+					}
+				});
+			}
+		});
+		return false;
+	},
 	getPromise(url, method, header, data) {
 		return new Promise((resolve, reject) => {
 			return uni.request({
@@ -44,9 +66,9 @@ const request = {
 						})
 						reject(res)
 					} else if (res.data.code == 101) {
-						uni.showToast({
-							title: '尚未登陆，请登陆后重试！',
-							icon: 'none'
+						//跳转登录页
+						uni.navigateTo({
+							url:'/pages/user/login'
 						})
 						reject(res)
 					} else {
