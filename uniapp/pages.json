@@ -45,6 +45,13 @@
 				"navigationBarTitleText": "登陆",
 				"navigationStyle":"default"
 			}
+		},
+		{
+			"path": "pages/user/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"navigationStyle":"default"
+			}
 		}
     ],
 	"globalStyle": {

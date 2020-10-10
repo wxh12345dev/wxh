@@ -5,6 +5,7 @@ if (process.env.NODE_ENV === 'development') {
 } else {
 	baseUrl = "https://www.wucunhua.com/"
 }
+Vue.prototype.$baseUrl = baseUrl
 const request = {
 	postJson(url, data) {
 		return this.getPromise(url, "POST", {
@@ -26,29 +27,40 @@ const request = {
 			url: url
 		})
 	},
-	login() {
-		//判断是否登陆
-		let user = uni.getStorageSync('user');
-		if (user != undefined && user != '') {
-			return true;
-		}
-		uni.login({
-			provider: 'weixin',
-			success: function(loginRes) {
-				console.log(loginRes.authResult);
-				// 获取用户信息
-				uni.getUserInfo({
-					provider: 'weixin',
-					success: function(infoRes) {
-						return true;
-						console.log('用户昵称为：' + infoRes.userInfo.nickName);
-					}
-				});
-			}
-		});
-		return false;
+	login(){
+		//#ifdef MP-WEIXIN
+			uni.login({
+				provider: 'weixin',
+				success: function(loginRes) {
+					console.log(loginRes.authResult);
+					// 获取用户信息
+					uni.getUserInfo({
+						provider: 'weixin',
+						success: function(infoRes) {
+							return true;
+							console.log('用户昵称为：' + infoRes.userInfo.nickName);
+						}
+					});
+				}
+			});
+		//#endif
+		//#ifdef APP-PLUS || APP-PLUS-NVUE || H5
+			//跳转登录页
+			uni.navigateTo({
+				url:'/pages/user/login?type=unlogin'
+			})
+		//#endif
 	},
 	getPromise(url, method, header, data) {
+		if(url!='login'&&url!='register'&&url!='getCode'){
+			let user = uni.getStorageSync('userinfo');
+			if (user == undefined || user == '') {
+				return new Promise((resolve, reject) => {
+					this.login()
+					reject(res)
+				})
+			}
+		}
 		return new Promise((resolve, reject) => {
 			return uni.request({
 				url: baseUrl + url,
@@ -58,6 +70,7 @@ const request = {
 				success: (res) => {
 					//返回数据及处理
 					if (res.data.code == 200) {
+						console.log(res)
 						resolve(res)
 					} else if (res.data.code == 412) {
 						uni.showToast({
@@ -66,10 +79,7 @@ const request = {
 						})
 						reject(res)
 					} else if (res.data.code == 101) {
-						//跳转登录页
-						uni.navigateTo({
-							url:'/pages/user/login'
-						})
+						this.login()
 						reject(res)
 					} else {
 						uni.showToast({

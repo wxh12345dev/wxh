@@ -15,8 +15,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wxh.model.User;
 import com.wxh.service.IUserService;
+import com.wxh.util.Constants;
+import com.wxh.util.EmailSender;
 import com.wxh.util.HttpUtils;
 import com.wxh.util.InvalidException;
+import com.wxh.util.RedisUtil;
 import com.wxh.util.Result;
 import com.wxh.util.ResultUtil;
 import com.wxh.util.StringUtil;
@@ -34,11 +37,23 @@ public class UserController {
 
 	@Autowired
 	private IUserService userService;
+	@Autowired
+	private RedisUtil redisUtil;
 
 	@RequestMapping("/login")
 	public Result login(String code, String username, String password, HttpSession session) throws IOException {
+		redisUtil.set("zhangsan", "登陆啦", 2);
+		System.out.println(redisUtil.get("zhangsan"));
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println(redisUtil.get("zhangsan"));
 		if (!StringUtil.isEmpty(code)) {
-			session.setAttribute("userId", checkUserInfo(code));
+			String userId = checkUserInfo(code);
+			session.setAttribute(Constants.USER_SESSION_INFO, userId);
+			return ResultUtil.getData(userId);
 		} else {
 			if (StringUtil.isEmpty(username)) {
 				throw new InvalidException("用户名不能为空！");
@@ -54,9 +69,11 @@ public class UserController {
 			if (user == null) {
 				throw new InvalidException("用户名或密码错误！");
 			}
-			session.setAttribute("userId", user.getId());
+			session.setAttribute(Constants.USER_SESSION_INFO, user.getId());
+			user.setPassword(null);
+			return ResultUtil.getData(user);
 		}
-		return ResultUtil.getInfo("登陆成功！");
+		
 	}
 
 	private String checkUserInfo(String code) throws IOException {
@@ -73,7 +90,7 @@ public class UserController {
 	}
 
 	@RequestMapping("/register")
-	public Result register(String username, String password, String code) throws IOException {
+	public Result register(String username, String password, String code,HttpSession session) throws IOException {
 		if (StringUtil.isEmpty(username)) {
 			throw new InvalidException("用户名不能为空！");
 		}
@@ -82,6 +99,10 @@ public class UserController {
 		}
 		if (StringUtil.isEmpty(code)) {
 			throw new InvalidException("验证码不能为空！");
+		}
+		String registerCode = getInfo(session, Constants.REGISTER_CODE);
+		if(!code.equals(registerCode)) {
+			throw new InvalidException("验证码有无！");
 		}
 		QueryWrapper<User> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq("username", username);
@@ -95,9 +116,27 @@ public class UserController {
 		user.setPassword(password);
 		user.setId(StringUtil.getUuid());
 		user.setCreated(new Date());
+		//新增用户
+		userService.save(user);
 		return ResultUtil.getInfo("注册成功！");
 	}
 
+	@RequestMapping("/getCode")
+	public Result getCode(String email, HttpSession session) {
+		if (!StringUtil.isEmail(email)) {
+			throw new InvalidException("邮箱格式有误！");
+		}
+		try {
+			String randomCode = StringUtil.getRandomCode();
+			EmailSender.sendEmail(email, "小华备忘录注册验证码", "您好！您注册的验证码为"+randomCode+"，,有效期为30分钟，请及时使用！【小华备忘录】");
+			session.setAttribute(Constants.REGISTER_CODE, randomCode);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new InvalidException("验证码发送失败！");
+		}
+		return ResultUtil.getInfo("验证码发送成功！");
+	}
+	
 	@RequestMapping("/bindUser")
 	public Result bindUser(String username, String password, String code, HttpSession session) throws IOException {
 		if (StringUtil.isEmpty(username)) {
@@ -114,21 +153,21 @@ public class UserController {
 		if (user == null) {
 			throw new InvalidException("该用户信息尚未注册，请注册后再进行绑定！");
 		}
-		user.setCode(getUserId(session));
+		user.setCode(getInfo(session,Constants.USER_SESSION_INFO));
 		userService.bindUser(user);
 		return ResultUtil.getInfo("绑定成功！");
 	}
 
 	@RequestMapping("/getBindUser")
 	public Result getBindUser(HttpSession session) throws IOException {
-		String userId = getUserId(session);
+		String userId = getInfo(session,Constants.USER_SESSION_INFO);
 		QueryWrapper<User> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq("code", userId);
 		return ResultUtil.getData(userService.getOne(queryWrapper));
 	}
 
-	private String getUserId(HttpSession session) {
-		return (String) session.getAttribute("userId");
+	private String getInfo(HttpSession session,String key) {
+		return (String) session.getAttribute(key);
 	}
 
 }

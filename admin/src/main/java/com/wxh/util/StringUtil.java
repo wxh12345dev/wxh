@@ -37,6 +37,9 @@ public class StringUtil {
 	}
 
 	public static boolean isEmail(String str) {
+		if(StringUtil.isEmpty(str)) {
+			return false;
+		}
 		String regex = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(str);

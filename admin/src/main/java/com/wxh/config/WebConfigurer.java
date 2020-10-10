@@ -13,8 +13,7 @@ public class WebConfigurer implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/login")
-		.excludePathPatterns("/register").excludePathPatterns("/error").excludePathPatterns("/getKaptchaImage");
+		registry.addInterceptor(loginInterceptor).addPathPatterns("/**");
 	}
 	@Override
     public void addCorsMappings(CorsRegistry registry) {
