@@ -3,6 +3,7 @@ package com.wxh.controller;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +43,6 @@ public class UserController {
 
 	@RequestMapping("/login")
 	public Result login(String code, String username, String password, HttpSession session) throws IOException {
-		redisUtil.set("zhangsan", "登陆啦", 2);
-		System.out.println(redisUtil.get("zhangsan"));
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		System.out.println(redisUtil.get("zhangsan"));
 		if (!StringUtil.isEmpty(code)) {
 			String userId = checkUserInfo(code);
 			session.setAttribute(Constants.USER_SESSION_INFO, userId);
@@ -100,10 +93,10 @@ public class UserController {
 		if (StringUtil.isEmpty(code)) {
 			throw new InvalidException("验证码不能为空！");
 		}
-		String registerCode = getInfo(session, Constants.REGISTER_CODE);
-		if(!code.equals(registerCode)) {
-			throw new InvalidException("验证码有无！");
-		}
+//		String registerCode = getInfo(session, Constants.REGISTER_CODE);
+//		if(!code.equals(registerCode)) {
+//			throw new InvalidException("验证码有无！");
+//		}
 		QueryWrapper<User> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq("username", username);
 		User user = userService.getOne(queryWrapper);
@@ -122,14 +115,21 @@ public class UserController {
 	}
 
 	@RequestMapping("/getCode")
-	public Result getCode(String email, HttpSession session) {
+	public Result getCode(String email,HttpServletRequest request) {
 		if (!StringUtil.isEmail(email)) {
 			throw new InvalidException("邮箱格式有误！");
+		}
+		String ipAddress = StringUtil.getIpAddress(request);
+		Object object = redisUtil.get(ipAddress);
+		if(object!=null) {
+			throw new InvalidException("验证码发送间隔不能小于30秒");
 		}
 		try {
 			String randomCode = StringUtil.getRandomCode();
 			EmailSender.sendEmail(email, "小华备忘录注册验证码", "您好！您注册的验证码为"+randomCode+"，,有效期为30分钟，请及时使用！【小华备忘录】");
-			session.setAttribute(Constants.REGISTER_CODE, randomCode);
+			redisUtil.set(ipAddress, new Date().getTime(),30);
+			//有效期30分钟
+//			redisUtil.set(email+Constas'snts.REGISTER_CODE, randomCode, 30*60);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new InvalidException("验证码发送失败！");
