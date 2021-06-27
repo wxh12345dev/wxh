@@ -13,6 +13,7 @@ const request = {
 		}, data);
 	},
 	get(url) {
+		console.log(url)
 		return this.getPromise(url, "GET", {
 			'content-type': 'application/x-www-form-urlencoded'
 		});
@@ -27,32 +28,32 @@ const request = {
 			url: url
 		})
 	},
-	login(){
+	login() {
 		//#ifdef MP-WEIXIN
-			uni.login({
-				provider: 'weixin',
-				success: function(loginRes) {
-					console.log(loginRes.authResult);
-					// 获取用户信息
-					uni.getUserInfo({
-						provider: 'weixin',
-						success: function(infoRes) {
-							return true;
-							console.log('用户昵称为：' + infoRes.userInfo.nickName);
-						}
-					});
-				}
-			});
+		uni.login({
+			provider: 'weixin',
+			success: function(loginRes) {
+				console.log(loginRes.authResult);
+				// 获取用户信息
+				uni.getUserInfo({
+					provider: 'weixin',
+					success: function(infoRes) {
+						return true;
+						console.log('用户昵称为：' + infoRes.userInfo.nickName);
+					}
+				});
+			}
+		});
 		//#endif
 		//#ifdef APP-PLUS || APP-PLUS-NVUE || H5
-			//跳转登录页
-			uni.navigateTo({
-				url:'/pages/user/login?type=unlogin'
-			})
+		//跳转登录页
+		uni.navigateTo({
+			url: '/pages/user/login?type=unlogin'
+		})
 		//#endif
 	},
 	getPromise(url, method, header, data) {
-		if(url!='login'&&url!='register'&&url!='getCode'){
+		if (url != 'login' && url != 'register' && url != 'getCode') {
 			let user = uni.getStorageSync('userinfo');
 			if (user == undefined || user == '') {
 				return new Promise((resolve, reject) => {
